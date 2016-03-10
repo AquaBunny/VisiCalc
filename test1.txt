@@ -1,0 +1,9 @@
+A1 = "1234"
+A2 = "This is longer than the required spaces"
+A3 = 08/02/1998
+A4 = 6
+A5 = 7
+A6 = 8
+A7 = 9
+A8 = 12
+A9 = ( SUM A4 - A8 )
