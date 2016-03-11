@@ -10,11 +10,17 @@ public class FormulaCell extends Cell{
 
     //turns value to display into string
     public String toString() {
-        String temp = "" + this.getValueDouble();
-        if(temp.length() > 9) {
-            return temp.substring(0,10);
+        double temp = this.getValueDouble();
+        String returnMe;
+        if(temp % 1 == 0) {
+            returnMe =  "" + (int) temp;
+        } else {
+            returnMe = "" + this.getValueDouble();
         }
-        return "" + this.getValueDouble();
+        if(returnMe.length() > 9) {
+            return returnMe.substring(0,9);
+        }
+        return returnMe;
     }
 
     //Creates the cell and calls all needed methods to properly initialize the cell
@@ -211,72 +217,90 @@ public class FormulaCell extends Cell{
                     }
                 } else if(components[i].equals("AVG")) {
                     if(components.length >= i+3) {
-                        //Gets the 2 coordinates for AVG
-                        String from = components[i]+1;
+                        //Gets the 2 coordinates for SUM
+                        String from = components[i+1];
                         String to = components[i+3];
-                        boolean bothCoords = true;
+                        boolean bothCoords = false;
+                        boolean fromLet = false, toLet = false, fromNum = false, toNum = false;
                         for(int j = 0; j < 26; ++j) {
-                            if(from.contains(""+numbers.charAt(j)) && from.contains(""+numbers.charAt(j))) {
-                                bothCoords = false;
+                            if(from.contains(""+letters.charAt(j))) {
+                                fromLet = true;
                             }
-                            if(to.contains(""+numbers.charAt(j)) && to.contains(""+numbers.charAt(j))) {
-                                bothCoords = false;
+                            if(from.contains(""+numbers.charAt(j))) {
+                                fromNum = true;
+                            }
+                            if(to.contains(""+letters.charAt(j))) {
+                                toLet = true;
+                            }
+                            if(to.contains(""+numbers.charAt(j))) {
+                                toNum = true;
+                            }
+                            if(fromLet && fromNum && toLet && toNum) {
+                                bothCoords = true;
+                                break;
                             }
                         }
-                        //Makes sure that both inputs for function are coordinates
+                        //Makes sure that both inputs are coordinates
                         if(bothCoords) {
                             //Turns them into array spaces
                             from = Grid.getSpace(from);
                             to = Grid.getSpace(to);
                             //Setting up int values of coordinates
                             int fromY = Integer.parseInt(from.substring(0, from.indexOf(",")));
-                            int fromX = Integer.parseInt(from.substring(from.indexOf(",") + 1));
+                            int fromX = Integer.parseInt(from.substring(from.indexOf(",") + 2));
                             int toY = Integer.parseInt(to.substring(0, to.indexOf(",")));
                             int toX = Integer.parseInt(to.substring(to.indexOf(",") + 2));
                             String space1Type = grid.spreadSheet[fromX][fromY].getType();
                             String space2Type = grid.spreadSheet[toX][toY].getType();
-                            if (space1Type.equals("NumberCell") || space1Type.equals("FormulaCell") && space2Type.equals("NumberCell") || space2Type.equals("FormulaCell")) {
-                                //Add up all cells between the given values then takes the average
-                                double totalValue = 0, total = 0;
+                            if (space1Type.equals("NumberCell") || space1Type.equals("FormulaCell") || space1Type.equals("Cell") && space2Type.equals("NumberCell") || space2Type.equals("FormulaCell") || space2Type.equals("Cell")) {
+                                //Add up all cells between the given values
+                                double total = 0;
+                                int amount = 0;
                                 for (int k = fromX; k <= toX; ++k) {
                                     for (int q = fromY; q <= toY; ++q) {
-                                        totalValue += grid.spreadSheet[k][q].getValueDouble();
-                                        ++total;
+                                    if (grid.spreadSheet[k][q].getType().equals("NumberCell") || grid.spreadSheet[q][k].getType().equals("Cell") || grid.spreadSheet[q][k].getType().equals("FormulaCell")) {
+                                        total += grid.spreadSheet[k][q].getValueDouble();
+                                        ++amount;
+                                    } else
+                                        System.exit(2);
                                     }
                                 }
-                                components[i] = "" + (totalValue / total);
-                                components[i + 3] = "" + (totalValue / total);
+                                components[i] = "" + total / amount;
+                                components[i + 3] = "" + total / amount;
                             }
+                        } else {
+                            isGoodToSolve = false;
+                            break;
                         }
                     }
                 } else if(components[i].equals("+")) {
-                    double num1 = findNumberVal(components[i-1], grid);
-                    double num2 = findNumberVal(components[i+1], grid);
+                    double num1 = findNumberVal(components[i-1]);
+                    double num2 = findNumberVal(components[i+1]);
                     double temp = num1 + num2;
                     components[i-1] = ""+temp;
                     components[i+1] = ""+temp;
                 } else if(components[i].equals("-")) {
-                    double num1 = findNumberVal(components[i-1], grid);
-                    double num2 = findNumberVal(components[i+1], grid);
+                    double num1 = findNumberVal(components[i-1]);
+                    double num2 = findNumberVal(components[i+1]);
                     double temp = num1 - num2;
                     components[i-1] = ""+temp;
                     components[i+1] = ""+temp;
                 } else if(components[i].equals("*")) {
-                    double num1 = findNumberVal(components[i-1], grid);
-                    double num2 = findNumberVal(components[i+1], grid);
+                    double num1 = findNumberVal(components[i-1]);
+                    double num2 = findNumberVal(components[i+1]);
                     double temp = num1 * num2;
                     components[i-1] = ""+temp;
                     components[i+1] = ""+temp;
                 } else if(components[i].equals("/")) {
-                    double num1 = findNumberVal(components[i-1], grid);
-                    double num2 = findNumberVal(components[i+1], grid);
+                    double num1 = findNumberVal(components[i-1]);
+                    double num2 = findNumberVal(components[i+1]);
                     double temp = num1 / num2;
                     components[i-1] = ""+temp;
                     components[i+1] = ""+temp;
                 }
             }
             if(OrdOfOps.length == 0) {
-                answer = findNumberVal(components[0], grid);
+                answer = findNumberVal(components[0]);
             } else {
                 if(isGoodToSolve)
                     answer = Double.parseDouble(components[OrdOfOps[OrdOfOps.length - 1]]);
@@ -284,12 +308,11 @@ public class FormulaCell extends Cell{
                     System.out.printf("Part of your formula was invalid try again\n");
             }
         }
-        //System.out.printf("Input: %s\nComponents: %s\nOrder of Ops: %s\nAnswer: %f\n", input, Arrays.toString(components), Arrays.toString(OrdOfOps), answer);
         return answer;
     }
 
     //Given a component of the equation returns the number value
-    public double findNumberVal(String input, Grid grid) {
+    public double findNumberVal(String input) {
         String letters = "ABCDEFGHIJKLMNOPQRSTUUVWXYZ";
         String numbers = "1234567890";
         boolean isCoord = false;
@@ -301,14 +324,12 @@ public class FormulaCell extends Cell{
         }
         if(isCoord) {
             String temp = Grid.getSpace(input);
-            System.out.println(temp);
             int y = Integer.parseInt(temp.substring(0,temp.indexOf(",")));
             int x = Integer.parseInt(temp.substring(temp.indexOf(",")+2));
-            value = grid.spreadSheet[y][x].getValueDouble();
+            value = this.grid.spreadSheet[y][x].getValueDouble();
         } else {
             value = Double.parseDouble(input);
         }
-        System.out.println(value);
         return value;
     }
 }
