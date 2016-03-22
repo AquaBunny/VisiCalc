@@ -1,5 +1,0 @@
-Requirements: 
-	Cell(parent) -> FormulaCell(child), TextCell(child), DateCell(child), NumberCell(child)
-	Grid(parent) no children:
-		Must contain a 2d array of cells named spreadsheet
-Create cell class that can hold any data type, spreadsheet is an array of cells
