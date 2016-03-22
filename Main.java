@@ -4,6 +4,14 @@
  * VisiCalc.java
  *  An implementation of the hit program VisiCalc in java
  */
+/**
+ * Extra Credit: PEMDAS (Parentheses, SUM, AVG, Multiplication, Division, Addition, Subtraction), nested parentheses, error checking
+ * SUM and AVG can do rectangular areas, grid can be any size,
+ * */
+
+/**
+ * TODO: SORT method, random test cases, bug fixes, more comments
+ * */
 package com.company;
 
 import java.io.File;
@@ -25,6 +33,7 @@ public class Main {
         //Program begins
         System.out.println("Welcome to VisiCalc, enter help for a list of commands.");
         input = inputReader.nextLine();
+        //"Hacked" pointer for use in the load function
         boolean[] keepGoing = {true};
         while(!input.toLowerCase().equals("quit") && keepGoing[0]) {
             //Checks input against commands, defaults to treating input as assigning

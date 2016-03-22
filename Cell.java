@@ -1,7 +1,11 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Cell implements Comparable<Cell>{
     private String inputValue;
+    private ArrayList<String> dependencies = new ArrayList<>();
+    private ArrayList<Double> valuesofDependencies = new ArrayList<>();
 
     //Generic toString, overridden by all children
     public String toString() {
@@ -36,5 +40,10 @@ public class Cell implements Comparable<Cell>{
     public int compareTo(Cell temp) {
 
         return 0;
+    }
+
+    //Will run through the list of dependencies and update the cells contents
+    public void upDateCell() {
+
     }
 }

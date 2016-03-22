@@ -59,6 +59,7 @@ public class Grid {
         for(int i = 0; i < this.spreadSheet[0].length; i++) {
             System.out.printf("%4d|", i+1);
             for(int j = 0; j < this.spreadSheet.length; j++) {
+                spreadSheet[j][i].upDateCell();
                 System.out.printf("%9s|", spreadSheet[j][i].toString());
             }
             System.out.printf("\n----+");
@@ -92,6 +93,25 @@ public class Grid {
             firstValue += Math.pow(26, k) * tempVal;
         }
         return (Integer.parseInt(value)-1) + ", " + (firstValue-1);
+    }
+
+    /**
+     * Does the opposite of getSpace, turns a coordinate pair into the cell value
+     **/
+    public static String getCell(int x, int y) {
+        String answer = "";
+        ++y;
+        do {
+            if(x / 26 >= 1) {
+                answer += letters.substring(x%26,x%26+1);
+                x /= 26;
+            } else {
+                answer += letters.substring(x,x+1);
+            }
+        } while(x > 26);
+
+        answer += "" + y;
+        return answer;
     }
 
     //Saves the command used to assign each cell to a given text file
