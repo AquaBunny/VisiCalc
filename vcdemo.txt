@@ -1,5 +1,0 @@
-G6 = 9
-B2 = ( SUM A1 - A3 )
-Flarp
-Print
-Quit
