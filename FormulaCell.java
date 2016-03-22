@@ -97,6 +97,8 @@ public class FormulaCell extends Cell{
         }
         //Gets the total number of operators
         int opLength = 0;
+        String operators = "";
+        boolean needsOps = false;
         for(int i = 0; i < length; ++i) {
             String temp = components[i];
             if(temp.equals("SUM") || temp.equals("AVG")) {
@@ -105,7 +107,26 @@ public class FormulaCell extends Cell{
                     components[i+2] = "_";
                 }
             }
-            if(temp.equals("*") || temp.equals("/") || temp.equals("+") || temp.equals("-") || temp.equals("(") || temp.equals(")")) {
+            /**
+            * Find every operator between parentheses and temp remove for counting then put back
+             * Handles this with the string operators which holds in descending order the operators
+             * of the parentheses.  After counting puts back the operators
+            * */
+
+            if(temp.equals(")")) {
+                int j = i;
+                needsOps = true;
+                while(!components[j].equals("(")) {
+                    String comp = components[j];
+                    if(comp.equals("*") || comp.equals("/") || comp.equals("+") || comp.equals("-")) {
+                        operators += comp;
+                        components[j] = "repMe";
+                    }
+                    --j;
+                }
+                ++opLength;
+            }
+            if(temp.equals("*") || temp.equals("/") || temp.equals("+") || temp.equals("-")) {
                 ++opLength;
             }
 
@@ -162,7 +183,24 @@ public class FormulaCell extends Cell{
             }
         }
 
-
+        if(needsOps)
+            for(int i = 0; i < components.length; ++i) {
+                if(components[i].equals("end")) {
+                    int j = i;
+                    while(!components[j].equals("start")) {
+                        String comp = components[j];
+                        if(comp.equals("repMe")) {
+                            if(operators.length() == 1) {
+                                components[j] = operators;
+                            } else {
+                                components[j] = operators.substring(0,1);
+                                operators = operators.substring(1);
+                            }
+                        }
+                        --j;
+                    }
+                }
+            }
 
         //Actual Calculations
         if(isGood) {
@@ -334,6 +372,17 @@ public class FormulaCell extends Cell{
                     components[i-1] = ""+temp;
                     components[i] = ""+temp;
                     components[i+1] = ""+temp;
+                } else if(components[i].equals("start")) {
+                    String betweenP = "";
+                    int temp = i;
+                    while(!components[temp].equals("end"))
+                        ++temp;
+                    for(int j = i+1; j < temp; ++j) {
+                        betweenP += " " + components[j];
+                    }
+                    double tempD = calculations(betweenP);
+                    components[i] = "" + tempD;
+                    components[temp] = "" +tempD;
                 }
             }
             if(OrdOfOps.length == 0) {
