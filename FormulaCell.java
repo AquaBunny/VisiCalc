@@ -211,19 +211,10 @@ public class FormulaCell extends Cell{
                                 //Add up all cells between the given values
                                 double total = 0;
                                 for (int y = fromY; y <= toY; ++y) {
-                                    int tempToX = toX;
-                                    int tempFromX = fromX;
-                                    if(y != toY) {
-                                        tempToX = grid.spreadSheet.length - 1;
-                                    } else {
-                                        tempFromX = 0;
-                                    }
-                                    for (int x = tempFromX; x <= tempToX; ++x) {
+                                    for (int x = fromX; x <= toX; ++x) {
                                         if(grid.spreadSheet[x][y].getType().equals("NumberCell") || grid.spreadSheet[x][y].getType().equals("Cell") || grid.spreadSheet[x][y].getType().equals("FormulaCell")) {
                                             total += grid.spreadSheet[x][y].getValueDouble();
                                             dependencies.add(Grid.getCell(x,y));
-                                            String temps = Grid.getCell(x,y);
-                                            double tempd = grid.spreadSheet[x][y].getValueDouble();
                                             valuesOfDependencies.add(grid.spreadSheet[x][y].getValueDouble());
                                         }
                                         else {
@@ -288,20 +279,11 @@ public class FormulaCell extends Cell{
                                 double total = 0;
                                 int amount = 0;
                                 for (int y = fromY; y <= toY; ++y) {
-                                    int tempToX = toX;
-                                    int tempFromX = fromX;
-                                    if(y != toY) {
-                                        tempToX = grid.spreadSheet.length - 1;
-                                    } else {
-                                        tempFromX = 0;
-                                    }
-                                    for (int x = tempFromX; x <= tempToX; ++x) {
+                                    for (int x = fromX; x <= toX; ++x) {
                                         if(grid.spreadSheet[x][y].getType().equals("NumberCell") || grid.spreadSheet[x][y].getType().equals("Cell") || grid.spreadSheet[x][y].getType().equals("FormulaCell")) {
                                             total += grid.spreadSheet[x][y].getValueDouble();
                                             ++amount;
                                             dependencies.add(Grid.getCell(x,y));
-                                            String temps = Grid.getCell(x,y);
-                                            double tempd = grid.spreadSheet[x][y].getValueDouble();
                                             valuesOfDependencies.add(grid.spreadSheet[x][y].getValueDouble());
 
                                         }
@@ -356,7 +338,6 @@ public class FormulaCell extends Cell{
             }
             if(OrdOfOps.length == 0) {
                 answer = findNumberVal(components[0]);
-                answer = answer;
             } else {
                 if(isGoodToSolve)
                     answer = Double.parseDouble(components[OrdOfOps[OrdOfOps.length - 1]]);
@@ -395,7 +376,6 @@ public class FormulaCell extends Cell{
         boolean valuesSame = true;
         for(int i = 0; i < dependencies.size(); ++i) {
             String coords = Grid.getSpace(dependencies.get(i));
-            String temp = dependencies.get(i);
             int x = Integer.parseInt(coords.substring(0,coords.indexOf(",")));
             int y = Integer.parseInt(coords.substring(coords.indexOf(",")+2));
             if(grid.spreadSheet[x][y].getType().equals("Formula Cell")) {
