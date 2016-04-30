@@ -25,7 +25,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
-        //1465477212
+        
         //Setting up background tasks
         String input;
         Scanner inputReader = new Scanner(System.in); //Reads Console Input
@@ -35,16 +35,6 @@ public class Main {
         Scanner fileReader = new Scanner("temp.txt");
 
         //Program begins
-        System.out.println("Enter the passcode to gain access to VC:");
-        System.out.print(">");
-        //input = inputReader.nextLine();
-        /*while(input.hashCode() != 1465477212) {
-            System.out.print("Wrong passcode fam, try again\n>");
-            input = inputReader.nextLine();
-            if(input.equals("quit")) {
-                System.exit(5);
-            }
-        }*/
         System.out.print("Welcome to VisiCalc, enter help for a list of commands.\n>");
         input = inputReader.nextLine();
         //Boolean pointer for use in the load function
