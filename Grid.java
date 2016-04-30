@@ -92,7 +92,7 @@ public class Grid {
             }
             firstValue += Math.pow(26, k) * tempVal;
         }
-        return (Integer.parseInt(value)-1) + ", " + (firstValue-1);
+        return (Integer.parseInt(value) - 1) + ", " + (firstValue - 1);
     }
 
     /**
@@ -139,7 +139,8 @@ public class Grid {
     //Sets given cell to blank
     public void clear(String cell) {
         String cellCoords = getSpace(cell);
-        int column = Integer.parseInt(cellCoords.substring(0,cellCoords.indexOf(","))), row = Integer.parseInt(cellCoords.substring(cellCoords.indexOf(",")+2));
+        int column = Integer.parseInt(cellCoords.substring(0,cellCoords.indexOf(",")));
+        int row = Integer.parseInt(cellCoords.substring(cellCoords.indexOf(",")+2));
         this.spreadSheet[row][column] = new Cell();
     }
 }

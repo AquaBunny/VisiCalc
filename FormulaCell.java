@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class FormulaCell extends Cell{
@@ -99,6 +100,7 @@ public class FormulaCell extends Cell{
         int opLength = 0;
         String operators = "";
         boolean needsOps = false;
+        ArrayList<Integer> tempParen = new ArrayList<>();
         for(int i = 0; i < length; ++i) {
             String temp = components[i];
             if(temp.equals("SUM") || temp.equals("AVG")) {
@@ -112,7 +114,6 @@ public class FormulaCell extends Cell{
              * Handles this with the string operators which holds in descending order the operators
              * of the parentheses.  After counting puts back the operators
             * */
-
             if(temp.equals(")")) {
                 int j = i;
                 needsOps = true;
@@ -124,13 +125,22 @@ public class FormulaCell extends Cell{
                     }
                     --j;
                 }
+                components[j] = "temp(";
+                tempParen.add(j);
                 ++opLength;
             }
+        }
+        for(int i = 0; i < length; ++i) {
+            String temp = components[i];
             if(temp.equals("*") || temp.equals("/") || temp.equals("+") || temp.equals("-")) {
                 ++opLength;
             }
-
         }
+        //Puts back opening parentheses for thing
+        for(int i: tempParen) {
+            components[i] = "(";
+        }
+        tempParen.clear();
         //Creates an array that holds the order in which operations will be called
         int[] OrdOfOps = new int[opLength];
         int OrdOfOpsCounter = 0;
@@ -138,13 +148,13 @@ public class FormulaCell extends Cell{
         for(int i = 0; i < length; ++i) {
             //With parentheses the first number is the open and the second is the close
             if(components[i].equals(")")) {
-                ++OrdOfOpsCounter;
-                OrdOfOps[OrdOfOpsCounter] = i;
+                //++OrdOfOpsCounter;
+                //OrdOfOps[OrdOfOpsCounter] = i;
                 int temp = i;
                 while(!components[temp].equals("(")) {
                     --temp;
                 }
-                OrdOfOps[OrdOfOpsCounter-1] = temp;
+                OrdOfOps[OrdOfOpsCounter] = temp;
                 components[i] = "end";
                 components[temp] = "start";
                 ++OrdOfOpsCounter;
@@ -182,7 +192,7 @@ public class FormulaCell extends Cell{
                 isGood = false;
             }
         }
-
+        //System.out.printf("Compenents: %s\nOrder Of Ops: %s\nTaken Bits: %s\n\n", Arrays.toString(components), Arrays.toString(OrdOfOps), operators);
         if(needsOps)
             for(int i = 0; i < components.length; ++i) {
                 if(components[i].equals("end")) {
@@ -199,9 +209,14 @@ public class FormulaCell extends Cell{
                         }
                         --j;
                     }
+                    tempParen.add(j);
+                    components[j] = "temp(";
                 }
             }
-
+        for(int i: tempParen) {
+            components[i] = "start";
+        }
+        tempParen.clear();
         //Actual Calculations
         if(isGood) {
             String letters = "ABCDEFGHIJKLMNOPQRSTUUVWXYZ";
@@ -381,8 +396,9 @@ public class FormulaCell extends Cell{
                         betweenP += " " + components[j];
                     }
                     double tempD = calculations(betweenP);
-                    components[i] = "" + tempD;
-                    components[temp] = "" +tempD;
+                    for(int tempI = i; tempI <= temp; ++tempI) {
+                        components[tempI] = ""+tempD;
+                    }
                 }
             }
             if(OrdOfOps.length == 0) {

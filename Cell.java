@@ -38,8 +38,19 @@ public class Cell implements Comparable<Cell>{
     }
 
     public int compareTo(Cell temp) {
-
-        return 0;
+        String thisType = this.getType();
+        String tempType = temp.getType();
+        if(thisType.equals("NumberCell") && tempType.equals("NumberCell")) {
+            if(this.getValueDouble() > temp.getValueDouble()) {
+                return 1;
+            } else if(this.getValueDouble() == temp.getValueDouble())
+                return 0;
+            else
+                return -1;
+        } else {
+            System.exit(4);
+            return 0;
+        }
     }
 
     //Will run through the list of dependencies and update the cells contents
