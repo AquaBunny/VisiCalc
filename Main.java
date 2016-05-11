@@ -25,18 +25,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
-        
         //Setting up background tasks
-        String input;
+        String input = "";
         Scanner inputReader = new Scanner(System.in); //Reads Console Input
         Grid grid = new Grid(7, 10); //Creating the grid
+        Display display = new Display(grid);
+        //Input inputWindow = new Input();
         //The Writer and reader used to load/save grids
         PrintWriter writer = new PrintWriter("temp.txt");
         Scanner fileReader = new Scanner("temp.txt");
 
         //Program begins
         System.out.print("Welcome to VisiCalc, enter help for a list of commands.\n>");
-        input = inputReader.nextLine();
+        input = display.getInput();
         //Boolean pointer for use in the load function
         boolean[] keepGoing = {true};
         while(!input.toLowerCase().equals("quit") && keepGoing[0]) {
@@ -74,12 +75,16 @@ public class Main {
                     //Give range values
                     sortMath(input.substring(6), grid, false);
                 }
+            } else if(input.equals("window")) {
+                Display test = new Display(grid);
             } else {
                 processInput(input, grid);
             }
             if(keepGoing[0])
                 System.out.print(">");
-                input = inputReader.nextLine();
+                do {
+                    input = display.getInput();
+                }   while(input.equals(""));
         }
         //Closes file i/o and message
         writer.close();
