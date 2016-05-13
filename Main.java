@@ -22,15 +22,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.concurrent.SynchronousQueue;
+
+// TODO: Add forms for help, boot up message, and quit.  Get user input from window to work
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
         //Setting up background tasks
-        String input = "";
-        Scanner inputReader = new Scanner(System.in); //Reads Console Input
+        String input;
+        //Scanner inputReader = new Scanner(System.in); //Reads Console Input
         Grid grid = new Grid(7, 10); //Creating the grid
         Display display = new Display(grid);
-        //Input inputWindow = new Input();
         //The Writer and reader used to load/save grids
         PrintWriter writer = new PrintWriter("temp.txt");
         Scanner fileReader = new Scanner("temp.txt");
@@ -84,6 +86,7 @@ public class Main {
                 System.out.print(">");
                 do {
                     input = display.getInput();
+                    System.out.print
                 }   while(input.equals(""));
         }
         //Closes file i/o and message

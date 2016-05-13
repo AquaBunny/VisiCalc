@@ -1,5 +1,5 @@
 /**
-* setContentPane is what creates all other J parts, is causing null pointer
+* to get input use seperate button that retrives input, fix later
 * */
 package com.company;
 
@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 public class Display extends JFrame{
     private JTable GridTable;
@@ -53,7 +54,7 @@ public class Display extends JFrame{
         input.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userInput = input.getText();
+
             }
         });
         input.addMouseListener(new MouseAdapter() {
@@ -69,6 +70,7 @@ public class Display extends JFrame{
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 if (e.getKeyCode() == 10) {
+                    userInput = input.getText();
                     input.setText("");
                 }
             }
