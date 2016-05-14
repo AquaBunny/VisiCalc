@@ -72,6 +72,11 @@ public class Display extends JFrame{
                 if (e.getKeyCode() == 10) {
                     userInput = input.getText();
                     input.setText("");
+                    try {
+                        Main.inputLoop(userInput, grid);
+                    } catch (Exception q) {
+                        System.out.println("Error");
+                    }
                 }
             }
         });

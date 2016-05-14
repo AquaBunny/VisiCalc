@@ -22,86 +22,72 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
-import java.util.concurrent.SynchronousQueue;
 
-// TODO: Add forms for help, boot up message, and quit.  Get user input from window to work
+// TODO: Make table in window update, and fix various bugs as they appear
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
-        //Setting up background tasks
-        String input;
-        //Scanner inputReader = new Scanner(System.in); //Reads Console Input
+    private static Display display;
+    public static void main(String[] args) {
         Grid grid = new Grid(7, 10); //Creating the grid
-        Display display = new Display(grid);
-        //The Writer and reader used to load/save grids
+        display = new Display(grid);
+        Popup open = new Popup("Open");
+    }
+
+    //Takes input string from display and processes it
+    static void inputLoop(String input, Grid grid) throws Exception{
+
         PrintWriter writer = new PrintWriter("temp.txt");
         Scanner fileReader = new Scanner("temp.txt");
-
-        //Program begins
-        System.out.print("Welcome to VisiCalc, enter help for a list of commands.\n>");
-        input = display.getInput();
-        //Boolean pointer for use in the load function
         boolean[] keepGoing = {true};
-        while(!input.toLowerCase().equals("quit") && keepGoing[0]) {
-            //Checks input against commands, defaults to treating input as assigning
-            if (input.toLowerCase().equals("help")) {
-                help();
-            } else if (input.toLowerCase().equals("print")) {
-                grid.print();
-            } else if (input.length() > 4 && input.toLowerCase().contains("save")) {
-                if (input.substring(0, 4).toLowerCase().equals("save")) {
-                    if (input.toLowerCase().contains(".txt")) {
-                        writer = new PrintWriter(input.substring(5), "utf-8");
-                        grid.saveGrid(writer);
-                    }
+
+        //Checks input against commands, defaults to treating input as assigning
+        if (input.toLowerCase().equals("help")) {
+            help();
+        } else if (input.toLowerCase().equals("print")) {
+            grid.print();
+        } else if (input.length() > 4 && input.toLowerCase().contains("save")) {
+            if (input.substring(0, 4).toLowerCase().equals("save")) {
+                if (input.toLowerCase().contains(".txt")) {
+                    writer = new PrintWriter(input.substring(5), "utf-8");
+                    grid.saveGrid(writer);
                 }
-            } else if (input.length() > 4 && input.toLowerCase().contains("load")) {
-                if (input.substring(0, 4).toLowerCase().equals("load")) {
-                    if (input.toLowerCase().contains(".txt")) {
-                        File temp = new File(input.substring(5));
-                        fileReader = new Scanner(temp);
-                        processFile(fileReader, grid, writer, keepGoing);
-                    }
-                }
-            } else if (input.toLowerCase().equals("clear")) {
-                grid.clear();
-            } else if (input.toLowerCase().contains("clear")) {
-                grid.clear(input.substring(input.indexOf(" ") + 1));
-            } else if(input.length() > 5 && input.contains("sorta")) {
-                if(input.toLowerCase().substring(0,5).equals("sorta")) {
-                    //Give range values
-                    sortMath(input.substring(6), grid, true);
-                }
-            } else if(input.length() > 5 && input.contains("sortd")) {
-                if(input.toLowerCase().substring(0,5).equals("sortd")) {
-                    //Give range values
-                    sortMath(input.substring(6), grid, false);
-                }
-            } else if(input.equals("window")) {
-                Display test = new Display(grid);
-            } else {
-                processInput(input, grid);
             }
-            if(keepGoing[0])
-                System.out.print(">");
-                do {
-                    input = display.getInput();
-                    System.out.print
-                }   while(input.equals(""));
+        } else if (input.length() > 4 && input.toLowerCase().contains("load")) {
+            if (input.substring(0, 4).toLowerCase().equals("load")) {
+                if (input.toLowerCase().contains(".txt")) {
+                    File temp = new File(input.substring(5));
+                    fileReader = new Scanner(temp);
+                    processFile(fileReader, grid, writer, keepGoing);
+                }
+            }
+        } else if (input.toLowerCase().equals("clear")) {
+            grid.clear();
+        } else if (input.toLowerCase().contains("clear")) {
+            grid.clear(input.substring(input.indexOf(" ") + 1));
+        } else if(input.length() > 5 && input.contains("sorta")) {
+            if(input.toLowerCase().substring(0,5).equals("sorta")) {
+                //Give range values
+                sortMath(input.substring(6), grid, true);
+            }
+        } else if(input.length() > 5 && input.contains("sortd")) {
+            if(input.toLowerCase().substring(0,5).equals("sortd")) {
+                //Give range values
+                sortMath(input.substring(6), grid, false);
+            }
+        } else if(input.toLowerCase().equals("quit")) {
+            display.dispose();
+        } else {
+            processInput(input, grid);
         }
+
         //Closes file i/o and message
         writer.close();
         fileReader.close();
-        System.out.printf("\nThanks for using VisiCalc!");
     }
 
     //Help command, prints out useful info
-    public static void help() {
-        System.out.print("Commands:\n" +
-                "Print: Prints the grid\n" +
-                "Quit: Exits program\n" +
-                "Save: Saves grid to a specified text file\n" +
-                "Load: Loads grid from a specified text file\n");
+    private static void help() {
+        Popup helpP = new Popup("Help");
     }
 
     //This method is called if the input is not a command, thus meaning a cell is being assigned
@@ -112,7 +98,7 @@ public class Main {
      * Determine what the type the value is, then create that type of cell
      * At the toAssign spot, also save input to Cells command value for saving
      */
-    public static void processInput(String input, Grid grid) {
+    private static void processInput(String input, Grid grid) {
         //If input does not contain the '=' operator skips it since its invalid
         if(input.contains("=")) {
             //Gets cell and value given to cell into 2 separate strings
@@ -197,7 +183,7 @@ public class Main {
     }
 
     //Reads each line of a file and runs it through the input processor, same as main method just uses nextLine instead of input
-    public static void processFile(Scanner fileReader, Grid grid, PrintWriter writer, boolean[] keepGoing) throws FileNotFoundException, UnsupportedEncodingException{
+    private static void processFile(Scanner fileReader, Grid grid, PrintWriter writer, boolean[] keepGoing) throws FileNotFoundException, UnsupportedEncodingException{
         while(fileReader.hasNextLine()) {
             String nextLine = fileReader.nextLine();
             if(nextLine.toLowerCase().equals("help")) {
@@ -243,7 +229,7 @@ public class Main {
     }
 
     //Repeating logic for both sort types
-    public static void sortMath(String range, Grid grid, boolean AorD) {
+    private static void sortMath(String range, Grid grid, boolean AorD) {
         //Logic for range
         int fromX = 0, fromY = 0, toX = 0, toY = 0;
         if(range.contains("-")) {
