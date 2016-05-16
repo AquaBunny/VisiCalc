@@ -120,7 +120,7 @@ public class Display extends JFrame{
         GridTable = new JTable(grid.spreadSheet, header1);
     }
 
-    public void update() {
+    void update() {
         DefaultTableModel temp = model;
         temp.setDataVector(grid.spreadSheet, header1);
         GridTable.setModel(temp);

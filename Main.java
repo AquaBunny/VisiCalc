@@ -43,8 +43,6 @@ public class Main {
         //Checks input against commands, defaults to treating input as assigning
         if (input.toLowerCase().equals("help")) {
             help();
-        } else if (input.toLowerCase().equals("print")) {
-            grid.print();
         } else if (input.length() > 4 && input.toLowerCase().contains("save")) {
             if (input.substring(0, 4).toLowerCase().equals("save")) {
                 if (input.toLowerCase().contains(".txt")) {
@@ -190,8 +188,6 @@ public class Main {
             String nextLine = fileReader.nextLine();
             if(nextLine.toLowerCase().equals("help")) {
                 help();
-            } else if(nextLine.toLowerCase().equals("print")) {
-                grid.print();
             } else if(nextLine.length() > 4 && nextLine.toLowerCase().contains("save")) {
                 if(nextLine.substring(0,4).toLowerCase().equals("save")) {
                     if (nextLine.toLowerCase().contains(".txt")) {

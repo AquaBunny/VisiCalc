@@ -44,12 +44,12 @@ public class FormulaCell extends Cell{
     }
 
     //Sets the formulaValue to the unsimplified value
-    public void setFormulaValue(String input) {
+    private void setFormulaValue(String input) {
         this.formulaValue = input.substring(input.indexOf("=")+2);
     }
 
     //Sets the value to the simplified value that will be displayed
-    public void setValue(String formula) {
+    private void setValue(String formula) {
         this.value = calculations(formula.substring(formula.indexOf("(")+2, formula.length()-2));
     }
 
@@ -59,7 +59,7 @@ public class FormulaCell extends Cell{
     }
 
     //Gets the value of the unsimplified formula
-    public String getFormulaValue() {
+    private String getFormulaValue() {
         return this.formulaValue;
     }
 
@@ -78,7 +78,7 @@ public class FormulaCell extends Cell{
      * Given a formula calculates the value in a float format
      * Order of Ops is: () > SUM == AVG > * == / > + == -
      */
-    public double calculations(String input) {
+    private double calculations(String input) {
         isBad = false;
         double answer = 0;
         boolean isGoodToSolve = true;
@@ -414,7 +414,7 @@ public class FormulaCell extends Cell{
     }
 
     //Given a component of the equation returns the number value
-    public double findNumberVal(String input) {
+    private double findNumberVal(String input) {
         String letters = "ABCDEFGHIJKLMNOPQRSTUUVWXYZ";
         boolean isCoord = false;
         double value;

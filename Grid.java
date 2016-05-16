@@ -15,61 +15,6 @@ public class Grid {
         }
     }
 
-    //Prints the values of the cells in the grid, infinitely scalable
-    void print() {
-        System.out.printf("    ");
-        /**
-         * If width is over 26, divide by 26 and print that value until the number dividing into is less
-         * than 26, take the mod of original number as final letter
-         *
-         * Find greatest power of 26 that goes into the number of that cell, divide to get letter for that space,
-         * take mod for rest of number, continue pattern on that mod
-         */
-        if(this.spreadSheet.length > 26) {
-            for(int i = 0; i < this.spreadSheet.length; i++) {
-                int width = i;
-                String header = "";
-                if(width < 26) {
-                    header = "" + letters.charAt(width);
-                } else {
-                    while(width > 25) {
-                        int j = 0;
-                        while(Math.pow(26, j) <= width) {
-                            j++;
-                        }
-                        j--;
-                        header += "" + letters.charAt((width / ((int) Math.pow(26, j)))-1);
-                        width %= (int) Math.pow(26, j);
-                    }
-                    header += letters.charAt(width);
-                }
-
-                System.out.printf("|%9s", header);
-            }
-        } else {
-            for (int i = 0; i < this.spreadSheet.length; i++) {
-                System.out.printf("|    %s    ", letters.charAt(i));
-            }
-        }
-        System.out.printf("|\n----+");
-        for(int i = 0; i < this.spreadSheet.length; i++) {
-            System.out.printf("---------+");
-        }
-        System.out.println();
-        for(int i = 0; i < this.spreadSheet[0].length; i++) {
-            System.out.printf("%4d|", i+1);
-            for(int j = 0; j < this.spreadSheet.length; j++) {
-                spreadSheet[j][i].upDateCell();
-                System.out.printf("%9s|", spreadSheet[j][i].toString());
-            }
-            System.out.printf("\n----+");
-            for(int k = 0; k < this.spreadSheet.length; k++) {
-                System.out.printf("---------+");
-            }
-            System.out.println();
-        }
-    }
-
     /**
      * To be able to handle infinite amount of letter spaces, make method that uses alphabet as base counting system
      * So AA = 1 * 26 + 1 * 1 or spot 27 so subtract 1 to get array space
