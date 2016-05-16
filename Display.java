@@ -9,16 +9,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 public class Display extends JFrame{
-    private JTable GridTable;
+    public JTable GridTable;
     private JPanel MainPanel;
     private JTextField input;
     private JScrollPane Scroll;
     private Grid grid;
     private String userInput = "";
     private String[] header1;
+    private DefaultTableModel model;
 
     Display(Grid grid) {
         super("Display");
@@ -28,8 +28,8 @@ public class Display extends JFrame{
         //Setting up GUI
         setContentPane(MainPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((int)screensize.getWidth()/2, (int)screensize.getHeight()/2);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 
         //Creating the table
         DefaultTableModel tableModel = new DefaultTableModel() {
@@ -39,7 +39,8 @@ public class Display extends JFrame{
             }
 
         };
-        //tableModel.setColumnIdentifiers(header1);
+
+        model = tableModel;
         tableModel.setDataVector(grid.spreadSheet, header1);
         GridTable.setModel(tableModel);
         //Displaying GUI
@@ -120,8 +121,9 @@ public class Display extends JFrame{
     }
 
     public void update() {
-        pack();
-        setVisible(true);
+        DefaultTableModel temp = model;
+        temp.setDataVector(grid.spreadSheet, header1);
+        GridTable.setModel(temp);
     }
 
     String getInput() {

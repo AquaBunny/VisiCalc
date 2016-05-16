@@ -14,7 +14,6 @@
 
 package com.company;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -23,12 +22,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
-// TODO: Make table in window update, and fix various bugs as they appear
+// TODO: Bug fixes
 
 public class Main {
     private static Display display;
+
     public static void main(String[] args) {
-        Grid grid = new Grid(7, 10); //Creating the grid
+        Grid grid = new Grid(10, 10); //Creating the grid
         display = new Display(grid);
         Popup open = new Popup("Open");
     }
@@ -76,11 +76,13 @@ public class Main {
             }
         } else if(input.toLowerCase().equals("quit")) {
             display.dispose();
+            System.exit(0);
         } else {
             processInput(input, grid);
         }
 
         //Closes file i/o and message
+        display.update();
         writer.close();
         fileReader.close();
     }
@@ -111,7 +113,7 @@ public class Main {
                 // 0123456789
                 //Gets the spot in the array of the cell and puts them into their respective ints
                 String cellCoords = Grid.getSpace(cellToAssign);
-                int column = Integer.parseInt(cellCoords.substring(0, cellCoords.indexOf(","))), row = Integer.parseInt(cellCoords.substring(cellCoords.indexOf(",") + 2));
+                int row = Integer.parseInt(cellCoords.substring(0, cellCoords.indexOf(","))), column = Integer.parseInt(cellCoords.substring(cellCoords.indexOf(",") + 2));
                 //Figures out which kind of cell the input is and creates a new cell of that type at the
                 //specified spot
                 if (assignValue.length() == 10 && assignValue.charAt(2) == '/' && assignValue.charAt(5) == '/') {

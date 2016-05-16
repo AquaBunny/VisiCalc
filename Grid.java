@@ -16,7 +16,7 @@ public class Grid {
     }
 
     //Prints the values of the cells in the grid, infinitely scalable
-    public void print() {
+    void print() {
         System.out.printf("    ");
         /**
          * If width is over 26, divide by 26 and print that value until the number dividing into is less
@@ -76,7 +76,7 @@ public class Grid {
      * Method pulls one char at a time from cell name, checks if its a letter and if so what its value is against string of
      * full alphabet, starts at high end and multiplies by increasing powers of 26
      * */
-    public static String getSpace(String value){
+    static String getSpace(String value){
         String tempFirstVal = "";
         int i = 0, firstValue = 0;
         while(letters.contains(value.substring(i,i+1))) {
@@ -98,7 +98,7 @@ public class Grid {
     /**
      * Does the opposite of getSpace, turns a coordinate pair into the cell value
      **/
-    public static String getCell(int x, int y) {
+    static String getCell(int x, int y) {
         String answer = "";
         ++y;
         do {
@@ -115,7 +115,7 @@ public class Grid {
     }
 
     //Saves the command used to assign each cell to a given text file
-    public void saveGrid(PrintWriter writer) {
+    void saveGrid(PrintWriter writer) {
         for(int i = 0; i < this.spreadSheet.length; i++) {
             for(int j = 0; j < this.spreadSheet[0].length; j++) {
                 String temp = this.spreadSheet[i][j].getCommand();
@@ -128,7 +128,7 @@ public class Grid {
     }
 
     //Sets all cells in grid to blank
-    public void clear() {
+    void clear() {
         for(int i = 0; i < this.spreadSheet.length; i++) {
             for(int j = 0; j < this.spreadSheet[0].length; j++) {
                 this.spreadSheet[i][j] = new Cell();
@@ -137,7 +137,7 @@ public class Grid {
     }
 
     //Sets given cell to blank
-    public void clear(String cell) {
+    void clear(String cell) {
         String cellCoords = getSpace(cell);
         int column = Integer.parseInt(cellCoords.substring(0,cellCoords.indexOf(",")));
         int row = Integer.parseInt(cellCoords.substring(cellCoords.indexOf(",")+2));
